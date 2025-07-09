@@ -57,13 +57,20 @@ Pre-trained model weights will be made available upon publication.
 
 ## 3. Training Pipeline
 
+**Our proposed FS-CAMOFreq framework**
+<img align="center" src="/assets/CAMOFreq.png">
+
+### Datasets
+
+All training datasets are located in the `./src/*/datasets/` directory. We recommend using aliases for better organization and management.
+
 ### Configuration
 
 All training configurations are located in the `./src/*/configs/` directory. Each configuration file contains detailed hyperparameters and training settings for different experimental setups.
 
 ### Training Commands
 
-Training commands and usage instructions will be provided in the respective configuration files.
+All training scripts are located in the `./src/*/scripts/` directory. Detailed usage instructions and command examples are provided in the respective script files.
 
 ## 4. Citation
 
