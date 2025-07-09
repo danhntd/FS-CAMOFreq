@@ -1,0 +1,18 @@
+services:
+  camo_freq:
+    image: nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+    container_name: camo_freq
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    volumes:
+      - ./config/.tmux.conf:/root/.tmux.conf
+      - ./config/.bashrc:/root/.bashrc
+      - ./scripts/:/scripts
+    ipc: host
+    network_mode: host
+    tty: true
+    stdin_open: true

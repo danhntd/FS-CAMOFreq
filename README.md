@@ -6,5 +6,79 @@ This repository is the official implementation of the paper entitled: **Few-Shot
 [[Paper]](https://doi.org/) [[Code]](https://github.com/danhntd/FS-CAMOFreq) [[Project Page]](https://danhntd.github.io/projects.html)
 
 ---
+
 ## Updates
-[2025/7] We have released the initial page for FS-CAMOFreq⚡!
+
+- **[2025/07]** Initial release of FS-CAMOFreq⚡!
+- **[2025/07]** Added environment setup instructions
+
+## 1. Environment Setup
+
+### Requirements
+
+- CUDA 12.x (tested on Docker container)
+
+### Quick Start
+
+1. **Start the Docker container:**
+
+   ```bash
+   cd environment
+   docker compose up -d
+   docker exec -it camo_freq /bin/bash
+   ```
+
+2. **Install dependencies (inside container):**
+
+   ```bash
+   # Install base dependencies
+   cd /scripts && bash init.sh
+
+   # Install iMTFA dependencies
+   cd /scripts && bash imtfa.sh
+
+   # Install iFSRCNN dependencies
+   cd /scripts && bash ifsrcnn.sh
+   ```
+
+## 2. Data & Weights
+
+### Dataset
+
+The proposed CAMO-FS dataset is publicly available and can be downloaded from [Kaggle](https://www.kaggle.com/datasets/danhnt/camo-fs-dataset).
+
+### Dataset Registration
+
+This repository includes pre-configured dataset registration scripts for Detectron2. For detailed information about external dataset registration in Detectron2, please refer to the [official documentation](https://detectron2.readthedocs.io/en/latest/tutorials/datasets.html).
+
+### Pre-trained Weights
+
+Pre-trained model weights will be made available upon publication.
+
+## 3. Training Pipeline
+
+### Configuration
+
+All training configurations are located in the `./src/*/configs/` directory. Each configuration file contains detailed hyperparameters and training settings for different experimental setups.
+
+### Training Commands
+
+Training commands and usage instructions will be provided in the respective configuration files.
+
+## 4. Citation
+
+If you find this work useful for your research, please cite our paper:
+
+```bibtex
+@article{
+
+}
+```
+
+## 5. Acknowledgements
+
+We would like to acknowledge the following open-source projects that have contributed to this work:
+
+- **[Detectron2](https://github.com/facebookresearch/detectron2.git)**
+- **[iMTFA](https://github.com/danganea/iMTFA)**
+- **[iFSRCNN](https://github.com/VinAIResearch/iFS-RCNN)**
