@@ -103,4 +103,16 @@ fi
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-source ~/miniconda3/bin/activate
+# Save and reload history after each command
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+# Increase history size
+export HISTSIZE=10000
+export HISTFILESIZE=10000
+# Avoid duplicates and ignored commands
+export HISTCONTROL=ignoredups:erasedups
+
+# Activate conda environments
+source /opt/conda/bin/activate imtfa # Default imtfa environment
+
+# Aliases
+alias cd_proj='cd /mnt/mmlab2024nas/danh/few-shot-frequency-augment/'

@@ -1,7 +1,10 @@
 services:
-  camo_freq:
-    image: nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
-    container_name: camo_freq
+  mmlab_danhnt_fsfa:
+    image: mmlab_danhnt_fsfa
+    container_name: mmlab_danhnt_fsfa
+    build:
+      context: .
+      dockerfile: Dockerfile
     runtime: nvidia
     deploy:
       resources:
@@ -9,9 +12,13 @@ services:
           devices:
             - capabilities: [gpu]
     volumes:
-      - ./config/.tmux.conf:/root/.tmux.conf
-      - ./config/.bashrc:/root/.bashrc
-      - ./scripts/:/scripts
+      - ./share_folder:/share_folder
+      - /home/:/home/
+      - /storageStudents/:/storageStudents/
+      - /mnt/mmlab2024nas/:/mnt/mmlab2024nas/
+      - /mmlabworkspace/:/mmlabworkspace/
+      - /mmlabworkspace_new/:/mmlabworkspace_new/
+      - /mnt/mmlabworkspace/:/mnt/mmlabworkspace/
     ipc: host
     network_mode: host
     tty: true

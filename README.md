@@ -20,25 +20,22 @@ This repository is the official implementation of the paper entitled: **Few-Shot
 
 ### Quick Start
 
-1. **Start the Docker container:**
-
+1. **Build and start the container:**
    ```bash
    cd environment
+   docker compose build
    docker compose up -d
-   docker exec -it camo_freq /bin/bash
    ```
 
-2. **Install dependencies (inside container):**
-
+2. **Enter the container:**
    ```bash
-   # Install base dependencies
-   cd /scripts && bash init.sh
+   docker exec -it mmlab_danhnt_fsfa /bin/bash
+   ```
 
-   # Install iMTFA dependencies
-   cd /scripts && bash imtfa.sh
-
-   # Install iFSRCNN dependencies
-   cd /scripts && bash ifsrcnn.sh
+3. **Verify GPU access (inside container):**
+   ```bash
+   nvidia-smi
+   conda info --envs
    ```
 
 ## 2. Data & Weights
