@@ -29,7 +29,7 @@ This repository is the official implementation of the paper entitled: **Few-Shot
 
 2. **Enter the container:**
    ```bash
-   docker exec -it mmlab_danhnt_fsfa /bin/bash
+   docker exec -it mmlab_danhnt_fs /bin/bash
    ```
 
 3. **Verify GPU access (inside container):**

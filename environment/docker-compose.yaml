@@ -1,7 +1,7 @@
 services:
-  mmlab_danhnt_fsfa:
-    image: mmlab_danhnt_fsfa
-    container_name: mmlab_danhnt_fsfa
+  mmlab_danhnt_fs:
+    image: mmlab_danhnt_fs
+    container_name: mmlab_danhnt_fs
     build:
       context: .
       dockerfile: Dockerfile
