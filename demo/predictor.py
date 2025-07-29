@@ -1,14 +1,15 @@
-import cv2
-import torch
-
+# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 import atexit
 import bisect
 import multiprocessing as mp
 from collections import deque
+import cv2
+import torch
+
 from detectron2.data import MetadataCatalog
+from detectron2.engine.defaults import DefaultPredictor
 from detectron2.utils.video_visualizer import VideoVisualizer
 from detectron2.utils.visualizer import ColorMode, Visualizer
-from fsdet.engine import DefaultPredictor
 
 
 class VisualizationDemo(object):
@@ -17,8 +18,7 @@ class VisualizationDemo(object):
         Args:
             cfg (CfgNode):
             instance_mode (ColorMode):
-            parallel (bool): whether to run the model in different processes
-                from visualization.
+            parallel (bool): whether to run the model in different processes from visualization.
                 Useful since the visualization logic can be slow.
         """
         self.metadata = MetadataCatalog.get(
@@ -34,11 +34,31 @@ class VisualizationDemo(object):
         else:
             self.predictor = DefaultPredictor(cfg)
 
+    def get_visualizer_and_pred_instances(self, image):
+        """ 
+
+        Call this to use
+        vis_output = visualizer.draw_instance_predictions(predictions=instances)
+
+        :param image: [description]
+        :type image: [type]
+        """
+        predictions = self.predictor(image)
+        # Convert image from OpenCV BGR format to Matplotlib RGB format.
+        image = image[:, :, ::-1]
+        visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
+
+        instances = predictions["instances"].to(self.cpu_device)
+
+        return instances, visualizer
+
+
     def run_on_image(self, image):
         """
         Args:
             image (np.ndarray): an image of shape (H, W, C) (in BGR order).
                 This is the format used by OpenCV.
+
         Returns:
             predictions (dict): the output of the model.
             vis_output (VisImage): the visualized image output.
@@ -47,14 +67,22 @@ class VisualizationDemo(object):
         predictions = self.predictor(image)
         # Convert image from OpenCV BGR format to Matplotlib RGB format.
         image = image[:, :, ::-1]
-        visualizer = Visualizer(
-            image, self.metadata, instance_mode=self.instance_mode
-        )
-        if "instances" in predictions:
-            instances = predictions["instances"].to(self.cpu_device)
-            vis_output = visualizer.draw_instance_predictions(
-                predictions=instances
+        visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
+        # visualizer._default_font_size = 28
+        if "panoptic_seg" in predictions:
+            panoptic_seg, segments_info = predictions["panoptic_seg"]
+            vis_output = visualizer.draw_panoptic_seg_predictions(
+                panoptic_seg.to(self.cpu_device), segments_info
             )
+        else:
+            if "sem_seg" in predictions:
+                vis_output = visualizer.draw_sem_seg(
+                    predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
+                )
+            if "instances" in predictions:
+
+                instances = predictions["instances"].to(self.cpu_device)
+                vis_output = visualizer.draw_instance_predictions(predictions=instances)
 
         return predictions, vis_output
 
@@ -69,9 +97,11 @@ class VisualizationDemo(object):
     def run_on_video(self, video):
         """
         Visualizes predictions on frames of the input video.
+
         Args:
-            video (cv2.VideoCapture): a :class:`VideoCapture` object,
-            whose source can be either a webcam or a video file.
+            video (cv2.VideoCapture): a :class:`VideoCapture` object, whose source can be
+                either a webcam or a video file.
+
         Yields:
             ndarray: BGR visualizations of each video frame.
         """
@@ -79,10 +109,17 @@ class VisualizationDemo(object):
 
         def process_predictions(frame, predictions):
             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-            if "instances" in predictions:
+            if "panoptic_seg" in predictions:
+                panoptic_seg, segments_info = predictions["panoptic_seg"]
+                vis_frame = video_visualizer.draw_panoptic_seg_predictions(
+                    frame, panoptic_seg.to(self.cpu_device), segments_info
+                )
+            elif "instances" in predictions:
                 predictions = predictions["instances"].to(self.cpu_device)
-                vis_frame = video_visualizer.draw_instance_predictions(
-                    frame, predictions
+                vis_frame = video_visualizer.draw_instance_predictions(frame, predictions)
+            elif "sem_seg" in predictions:
+                vis_frame = video_visualizer.draw_sem_seg(
+                    frame, predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
                 )
 
             # Converts Matplotlib RGB format to OpenCV BGR format
@@ -154,13 +191,9 @@ class AsyncPredictor:
         for gpuid in range(max(num_gpus, 1)):
             cfg = cfg.clone()
             cfg.defrost()
-            cfg.MODEL.DEVICE = (
-                "cuda:{}".format(gpuid) if num_gpus > 0 else "cpu"
-            )
+            cfg.MODEL.DEVICE = "cuda:{}".format(gpuid) if num_gpus > 0 else "cpu"
             self.procs.append(
-                AsyncPredictor._PredictWorker(
-                    cfg, self.task_queue, self.result_queue
-                )
+                AsyncPredictor._PredictWorker(cfg, self.task_queue, self.result_queue)
             )
 
         self.put_idx = 0

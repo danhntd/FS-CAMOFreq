@@ -1,15 +1,18 @@
+# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+import argparse
 import numpy as np
+import os
+from itertools import chain
 import cv2
+import tqdm
 from PIL import Image
 
-import argparse
-import os
 from detectron2.config import get_cfg
 from detectron2.data import DatasetCatalog, MetadataCatalog, build_detection_train_loader
 from detectron2.data import detection_utils as utils
+from detectron2.data.build import filter_images_with_few_keypoints
 from detectron2.utils.logger import setup_logger
 from detectron2.utils.visualizer import Visualizer
-from itertools import chain
 
 
 def setup(args):
@@ -29,15 +32,9 @@ def parse_args(in_args=None):
         required=True,
         help="visualize the annotations or the data loader (with pre-processing)",
     )
-    parser.add_argument(
-        "--config-file", default="", metavar="FILE", help="path to config file"
-    )
-    parser.add_argument(
-        "--output-dir", default="./", help="path to output directory"
-    )
-    parser.add_argument(
-        "--show", action="store_true", help="show output in a window"
-    )
+    parser.add_argument("--config-file", default="", metavar="FILE", help="path to config file")
+    parser.add_argument("--output-dir", default="./", help="path to output directory")
+    parser.add_argument("--show", action="store_true", help="show output in a window")
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
@@ -77,30 +74,23 @@ if __name__ == "__main__":
                 if cfg.INPUT.FORMAT == "BGR":
                     img = img[:, :, [2, 1, 0]]
                 else:
-                    img = np.asarray(
-                        Image.fromarray(img, mode=cfg.INPUT.FORMAT).convert(
-                            "RGB"
-                        )
-                    )
+                    img = np.asarray(Image.fromarray(img, mode=cfg.INPUT.FORMAT).convert("RGB"))
 
                 visualizer = Visualizer(img, metadata=metadata, scale=scale)
                 target_fields = per_image["instances"].get_fields()
-                labels = [
-                    metadata.thing_classes[i]
-                    for i in target_fields["gt_classes"]
-                ]
+                labels = [metadata.thing_classes[i] for i in target_fields["gt_classes"]]
                 vis = visualizer.overlay_instances(
                     labels=labels,
                     boxes=target_fields.get("gt_boxes", None),
+                    masks=target_fields.get("gt_masks", None),
+                    keypoints=target_fields.get("gt_keypoints", None),
                 )
                 output(vis, str(per_image["image_id"]) + ".jpg")
     else:
-        dicts = list(
-            chain.from_iterable(
-                [DatasetCatalog.get(k) for k in cfg.DATASETS.TRAIN]
-            )
-        )
-        for dic in dicts:
+        dicts = list(chain.from_iterable([DatasetCatalog.get(k) for k in cfg.DATASETS.TRAIN]))
+        if cfg.MODEL.KEYPOINT_ON:
+            dicts = filter_images_with_few_keypoints(dicts, 1)
+        for dic in tqdm.tqdm(dicts):
             img = utils.read_image(dic["file_name"], "RGB")
             visualizer = Visualizer(img, metadata=metadata, scale=scale)
             vis = visualizer.draw_dataset_dict(dic)

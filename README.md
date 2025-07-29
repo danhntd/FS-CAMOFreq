@@ -81,10 +81,9 @@ If you find this work useful for your research, please cite our paper:
 
 ## 5. Acknowledgements
 
-This repo is based on [iFS-RCNN](https://github.com/VinAIResearch/iFS-RCNN) with added frequency domain augmentation techniques for few-shot object segmentation.
+This repo is based on [iMTFA](https://github.com/danganea/iMTFA) with added frequency domain augmentation techniques for few-shot object segmentation.
 
 We would like to acknowledge the following open-source projects that have contributed to this work:
 
 - **[Detectron2](https://github.com/facebookresearch/detectron2.git)**
 - **[iMTFA](https://github.com/danganea/iMTFA)**
-- **[iFSRCNN](https://github.com/VinAIResearch/iFS-RCNN)**

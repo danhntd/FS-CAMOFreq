@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 
+import argparse
+import json
 import numpy as np
+import os
+from collections import defaultdict
 import cv2
 import tqdm
 from fvcore.common.file_io import PathManager
 
-import argparse
-import json
-import os
-from collections import defaultdict
 from detectron2.data import DatasetCatalog, MetadataCatalog
 from detectron2.structures import Boxes, BoxMode, Instances
 from detectron2.utils.logger import setup_logger
@@ -23,11 +23,11 @@ def create_instances(predictions, image_size):
     chosen = (score > args.conf_threshold).nonzero()[0]
     score = score[chosen]
     bbox = np.asarray([predictions[i]["bbox"] for i in chosen])
-    bbox = BoxMode.convert(bbox, BoxMode.XYWH_ABS, BoxMode.XYXY_ABS)
+    print(bbox.shape[0])
+    if bbox.shape[0] > 0: 
+      bbox = BoxMode.convert(bbox, BoxMode.XYWH_ABS, BoxMode.XYXY_ABS)
 
-    labels = np.asarray(
-        [dataset_id_map(predictions[i]["category_id"]) for i in chosen]
-    )
+    labels = np.asarray([dataset_id_map(predictions[i]["category_id"]) for i in chosen])
 
     ret.scores = score
     ret.pred_boxes = Boxes(bbox)
@@ -44,19 +44,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="A script that visualizes the json predictions from COCO or LVIS dataset."
     )
-    parser.add_argument(
-        "--input", required=True, help="JSON file produced by the model"
-    )
-    parser.add_argument("--output", required=True, help="output directory")
-    parser.add_argument(
-        "--dataset", help="name of the dataset", default="coco_2017_val"
-    )
-    parser.add_argument(
-        "--conf-threshold",
-        default=0.5,
-        type=float,
-        help="confidence threshold",
-    )
+    parser.add_argument("--input", default="/storageStudents/danhnt/iMTFA/checkpoints/camo_mtfa_default_noset_origin/camo_model_novel1_1shot_mask_rcnn_R_101_FPN_mtfa/inference/coco_instances_results.json", help="JSON file produced by the model")
+    parser.add_argument("--output", default="/storageStudents/danhnt/iMTFA/checkpoints/camo_mtfa_default_noset_origin/camo_model_novel1_1shot_mask_rcnn_R_101_FPN_mtfa/visualization/", help="output directory")
+    parser.add_argument("--dataset", help="name of the dataset", default="camo_test_novel1")
+    parser.add_argument("--conf-threshold", default=0.5, type=float, help="confidence threshold")
     args = parser.parse_args()
 
     logger = setup_logger()
@@ -65,6 +56,7 @@ if __name__ == "__main__":
         predictions = json.load(f)
 
     pred_by_image = defaultdict(list)
+    print(pred_by_image)
     for p in predictions:
         pred_by_image[p["image_id"]].append(p)
 
@@ -90,9 +82,7 @@ if __name__ == "__main__":
         img = cv2.imread(dic["file_name"], cv2.IMREAD_COLOR)[:, :, ::-1]
         basename = os.path.basename(dic["file_name"])
 
-        predictions = create_instances(
-            pred_by_image[dic["image_id"]], img.shape[:2]
-        )
+        predictions = create_instances(pred_by_image[dic["image_id"]], img.shape[:2])
         vis = Visualizer(img, metadata)
         vis_pred = vis.draw_instance_predictions(predictions).get_image()
 
@@ -101,3 +91,4 @@ if __name__ == "__main__":
 
         concat = np.concatenate((vis_pred, vis_gt), axis=1)
         cv2.imwrite(os.path.join(args.output, basename), concat[:, :, ::-1])
+        

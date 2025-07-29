@@ -29,7 +29,7 @@ def main():
 
             sum_res = []
             for idx, line in reversed(list(enumerate(lineinfos))):
-                if "fsdet.evaluation.camo_evaluation INFO: [" in line and len(sum_res) < 2: # sum_res = [seg, det]
+                if "d2.evaluation.camo_evaluation INFO: [" in line and len(sum_res) < 2: # sum_res = [seg, det]
                   tmp = line.split("INFO: [")[1][:-2] + " " + lineinfos[idx+1][:-2] + " "
                   sum_res.append(tmp)
             sum_res = [sum_res[0] + sum_res[1]]
