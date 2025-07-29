@@ -86,5 +86,4 @@ This repo is based on [iFS-RCNN](https://github.com/VinAIResearch/iFS-RCNN) with
 We would like to acknowledge the following open-source projects that have contributed to this work:
 
 - **[Detectron2](https://github.com/facebookresearch/detectron2.git)**
-- **[iMTFA](https://github.com/danganea/iMTFA)**
 - **[iFSRCNN](https://github.com/VinAIResearch/iFS-RCNN)**
