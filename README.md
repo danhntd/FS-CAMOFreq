@@ -59,15 +59,15 @@ Pre-trained model weights will be made available upon publication.
 
 ### Datasets
 
-All training datasets are located in the `./src/*/datasets/` directory. We recommend using aliases for better organization and management.
+All training datasets are located in the `datasets/` directory. We recommend using aliases for better organization and management.
 
 ### Configuration
 
-All training configurations are located in the `./src/*/configs/` directory. Each configuration file contains detailed hyperparameters and training settings for different experimental setups.
+All training configurations are located in the `configs/` directory. Each configuration file contains detailed hyperparameters and training settings for different experimental setups.
 
 ### Training Commands
 
-All training scripts are located in the `./src/*/scripts/` directory. Detailed usage instructions and command examples are provided in the respective script files.
+All training scripts are located in the `scripts/` directory. Detailed usage instructions and command examples are provided in the respective script files.
 
 ## 4. Citation
 
@@ -80,6 +80,8 @@ If you find this work useful for your research, please cite our paper:
 ```
 
 ## 5. Acknowledgements
+
+This repo is based on [iFS-RCNN](https://github.com/VinAIResearch/iFS-RCNN) with added frequency domain augmentation techniques for few-shot object segmentation.
 
 We would like to acknowledge the following open-source projects that have contributed to this work:
 

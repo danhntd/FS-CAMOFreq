@@ -3,3 +3,13 @@
 *.pkl
 *.log
 *.env
+*.pth
+*.pkl
+*.pt
+output
+output/*
+checkpoints
+checkpoints/*
+__pycache__/
+*.pyc
+datasets/*
