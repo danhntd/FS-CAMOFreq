@@ -11,6 +11,7 @@ This repository is the official implementation of the paper entitled: **Few-Shot
 
 - **[2025/07]** Initial release of FS-CAMOFreq⚡!
 - **[2025/07]** Added environment setup instructions
+- **[2025/08]** Added configs
 
 ## 1. Environment Setup
 
