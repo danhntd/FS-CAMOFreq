@@ -1,7 +1,11 @@
 # FS-CAMOFreq: Few-Shot Instance Segmentation: An Exploration in the Frequency Domain for Camouflage Instances
 
 This repository is the official implementation of the paper entitled: **Few-Shot Instance Segmentation: An Exploration in the Frequency Domain for Camouflage Instances**. <br>
+
 **Authors**: Thanh-Danh Nguyen, Hung-Phu Cao, Thanh Duc Ngo, Vinh-Tiep Nguyen†, and Tam V. Nguyen.
+
+> **Abstract:** 
+Few-shot instance segmentation is an intense yet essential task, particularly in camouflaged scenarios where visual ambiguity between foreground and background makes instance level recognition more difficult. Prior approaches primarily focused on image augmentations in the color space domain to provide diverse perspective information to the segmentation models. However, this type of augmentation often fails to capture the full range of visual characteristics needed for robust generalization, particularly in camouflage images, due to the limited similar representation in the color space domain. To this end, we tackle this gap by exploiting a novel approach to augment and enhance image features in the derivative frequency domain. Accordingly, we propose a novel framework tailored for few-shot camouflage instance segmentation via the instance-aware frequency-based augmentation, dubbed FS-CAMOFreq, to enhance image diversity while preserving semantic structure, thereby improving the ability of the few-shot segmentor to learn from limited data. Extensive experiments on the challenging CAMO-FS benchmark demonstrate that our approach achieves superior performance compared to state-of-the-art baselines.
 
 [[Paper]](https://doi.org/) [[Code]](https://github.com/danhntd/FS-CAMOFreq) [[Project Page]](https://danhntd.github.io/projects.html)
 
@@ -56,7 +60,7 @@ Pre-trained model weights will be made available upon publication.
 ## 3. Training Pipeline
 
 **Our proposed FS-CAMOFreq framework**
-<img align="center" src="/assets/CAMOFreq.png">
+<img align="center" src="./assets/CAMOFreq.png">
 
 ### Datasets
 
