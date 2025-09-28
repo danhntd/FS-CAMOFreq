@@ -16,6 +16,7 @@ Few-shot instance segmentation is an intense yet essential task, particularly in
 - **[2025/07]** Initial release of FS-CAMOFreq⚡!
 - **[2025/07]** Added environment setup instructions
 - **[2025/08]** Added configs
+- **[2025/09]** Added script to generate training data
 
 ## 1. Environment Setup
 
@@ -66,6 +67,8 @@ Pre-trained model weights will be made available upon publication.
 
 All training datasets are located in the `datasets/` directory. We recommend using aliases for better organization and management.
 
+Run the script `gen_data.py` located in the `prepare/` directory, passing your `datasets/` directory as an argument. Example data located in the `prepare/example`
+
 ### Configuration
 
 All training configurations are located in the `configs/` directory. Each configuration file contains detailed hyperparameters and training settings for different experimental setups.
@@ -79,8 +82,16 @@ All training scripts are located in the `scripts/` directory. Detailed usage ins
 If you find this work useful for your research, please cite our paper:
 
 ```bibtex
-@article{
-
+@INPROCEEDINGS{11133964,
+  author={Nguyen, Thanh-Danh and Cao, Hung-Phu and Ngo, Thanh Duc and Nguyen, Vinh-Tiep and Nguyen, Tam V.},
+  booktitle={2025 International Conference on Multimedia Analysis and Pattern Recognition (MAPR)}, 
+  title={Few-Shot Instance Segmentation: An Exploration in the Frequency Domain for Camouflage Instances}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-6},
+  keywords={Instance segmentation;Visualization;Image color analysis;Frequency-domain analysis;Semantics;Benchmark testing;Image representation;Frequency diversity;Image augmentation;Pattern recognition;Few-shot Instance Segmentation;Camouflage Instance Segmentation;Frequency Domain Augmentation},
+  doi={10.1109/MAPR67746.2025.11133964}
 }
 ```
 
